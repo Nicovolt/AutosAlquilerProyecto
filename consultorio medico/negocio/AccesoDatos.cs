@@ -29,21 +29,7 @@ namespace negocio
             comando.CommandText = consulta;
         }
 
-        public void ejecutarLectura()
-        {
-            comando.Connection = conexion;
-            try
-            {
-                conexion.Open();
-                lector = comando.ExecuteReader();
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-
-        }
+       
 
         public void ejecutarAccion()
         {

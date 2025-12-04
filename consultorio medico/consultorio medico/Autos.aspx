@@ -6,9 +6,9 @@
             <ContentTemplate>
 
                 <div class="card-custom">
-                    <div class="card-header-custom">
-                        <h4>Agregar un nuevo auto</h4>
-                    </div>
+                   <h3 class="mb-0">
+                   <asp:Literal ID="ltlTitulo" runat="server" />
+                   </h3>
                     <div class="card-body">
                         <div class="form-contenedor">
                             <div class="mb-3">

@@ -14,7 +14,7 @@ namespace negocio
         {
             AccesoDatos datos = new AccesoDatos();
             datos.setearConsulta("SELECT * FROM Marca");
-            datos.ejecutarLectura();
+            datos.ejecutarAccion();
             List<Marca> lista = new List<Marca>();
             try
             {
@@ -42,7 +42,7 @@ namespace negocio
             AccesoDatos datos = new AccesoDatos();
             datos.setearConsulta("SELECT * FROM MARCA WHERE idMarca = @IdMarca");
             datos.setearParametro("@IdMarca", id);
-            datos.ejecutarLectura();
+            datos.ejecutarAccion();
             try
             {
                     Marca marca = new Marca();
@@ -63,6 +63,15 @@ namespace negocio
                 datos.cerrarConexion();
             }
        }
+
+        public void Agregar(Marca aux)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            datos.setearConsulta("INSERT INTO MARCA (nombre) VALUES (@Nombre)");
+            datos.setearParametro("@Nombre", aux.Nombre);
+            datos.ejecutarAccion();
+            datos.cerrarConexion();
+        }
 
     }
 }

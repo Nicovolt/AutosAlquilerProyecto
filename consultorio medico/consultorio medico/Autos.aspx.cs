@@ -13,33 +13,44 @@ namespace consultorio_medico
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if(Request.QueryString["id"] != null) 
-            {
+            
+            
               if (!IsPostBack)
               {
-               
-                int idAuto = int.Parse(Request.QueryString["id"]);
+                    CargarCombos();
+                    int idAuto = ObtenerIdAuto();
+                    
 
                 if (idAuto != -1)
                 {
                         
                         
                         CargarAuto(idAuto);
-                        /*ltlTitulo.Text = "Modificar Producto";*/
+                        ltlTitulo.Text = "Modificar Auto";
                         btnAgregar.Text = "Actualizar";
                         
                     }
                 else
                 {
-                      CargarCombos();
+                        ltlTitulo.Text = "Nuevo Auto";
+                        btnAgregar.Text = "Agregar";
+                        
                 }
               }
-            }
+            
             
              
 
         }
 
+        private int ObtenerIdAuto()
+        {
+            if (Request.QueryString["id"] != null)
+            {
+                return int.TryParse(Request.QueryString["id"], out int id) ? id : -1;
+            }
+            return -1;
+        }
 
         private void CargarCombos()
         {
@@ -81,7 +92,7 @@ namespace consultorio_medico
             Categoria categoria = categoriaNegocio.ObtenerCategoriaPorId(auto.idCategoria);
             try
             {
-                CargarCombos();
+                
                 txtModelo.Text = auto.modelo;
                 txtAño.Text = auto.anio.ToString();
                 txtColor.Text = auto.color;
@@ -102,6 +113,7 @@ namespace consultorio_medico
         {
             AutoNegocio autoNegocio = new AutoNegocio();
             Auto auto = new Auto();
+            int idAuto = ObtenerIdAuto();
             try
             {
                 auto.precio = decimal.Parse(txtPrecio.Text);
@@ -112,15 +124,23 @@ namespace consultorio_medico
                 auto.idMarca = int.Parse(ddlMarca.SelectedValue);
                 auto.idCategoria = int.Parse(ddlCategoria.SelectedValue);
                 auto.disponible = true;
+                if(idAuto != -1)
+                {
+                    auto.idAuto = idAuto;
+                    autoNegocio.Modificar(auto);
+                }
+                else
+                {
 
-                autoNegocio.Agregar(auto);
-
+                    autoNegocio.Agregar(auto);
+                }
+                Response.Redirect("Default.aspx");
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                MostrarError("Error al guardar el producto: " + ex.Message);
             }
         }
         private void MostrarError(string mensaje)

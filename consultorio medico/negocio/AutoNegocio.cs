@@ -19,7 +19,7 @@ namespace negocio
             {
                 // Cambiamos a la consulta correcta
                 datos.setearConsulta("SELECT IdAuto, Modelo, Precio, IdMarca, IdCategoria, Anio, Color, NumPatente FROM Autos");
-                datos.ejecutarLectura();
+                datos.ejecutarAccion();
 
                 while (datos.Lector.Read())
                 {
@@ -89,8 +89,8 @@ namespace negocio
             {
                 datos.setearConsulta("select * from Autos where IdAuto = @ID");
                 datos.setearParametro("@ID", id);
-                datos.ejecutarLectura();
-                    Auto aux = new Auto();
+                datos.ejecutarAccion();
+                Auto aux = new Auto();
                 while (datos.Lector.Read())
                 {
                    aux.idAuto = (int)datos.Lector["IdAuto"];
@@ -134,6 +134,32 @@ namespace negocio
                 datos.cerrarConexion();
             }
 
+        }
+
+        public void Modificar(Auto auto)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.setearConsulta("update Autos set Precio=@precio, Color=@color, Anio=@anio, Modelo=@modelo, NumPatente=@numPatente, IdCategoria=@idCategoria, IdMarca=@idMarca where IdAuto=@idAuto");
+                datos.setearParametro("@precio", auto.precio);
+                datos.setearParametro("@color", auto.color);
+                datos.setearParametro("@anio", auto.anio);
+                datos.setearParametro("@modelo", auto.modelo);
+                datos.setearParametro("@numPatente", auto.numPatente);
+                datos.setearParametro("@idCategoria", auto.idCategoria);
+                datos.setearParametro("@idMarca", auto.idMarca);
+                datos.setearParametro("@idAuto", auto.idAuto);
+                datos.ejecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }   
         }
     }
 }

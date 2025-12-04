@@ -19,7 +19,7 @@ namespace negocio
                 // Consulta directa a la tabla Imagen
                 data.setearConsulta("SELECT Id, IdProducto, ImagenUrl, Activo FROM Imagen WHERE IdProducto = @IdAuto");
                 data.setearParametro("@IdAuto", id);
-                data.ejecutarLectura();
+                data.ejecutarAccion();
 
                 while (data.Lector.Read())
                 {
