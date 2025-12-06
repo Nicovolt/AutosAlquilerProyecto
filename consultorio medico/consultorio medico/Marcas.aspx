@@ -139,9 +139,9 @@
                             
 
                             <asp:Label ID="lblMensaje" runat="server" ForeColor="Red" CssClass="label-error" />
-                            <asp:Button Text="Modificar" runat="server" OnClick="Unnamed_Click" CssClass="btn-custom btn-warning-custom" 
+                            <asp:Button Text="Modificar" runat="server" OnClick="Editar" CssClass="btn-custom btn-warning-custom" 
                                 OnClientClick="return confirm('¿Estás seguro de que deseas modificar esta marca?');" />
-                            <asp:Button Text="Eliminar" runat="server" OnClick="Unnamed_Click1" CssClass="btn-custom btn-danger-custom" 
+                            <asp:Button Text="Eliminar" runat="server" OnClick="Eliminar" CssClass="btn-custom btn-danger-custom" 
                                 OnClientClick="return confirm('¿Estás seguro de que deseas eliminar esta marca?');" />
 
 

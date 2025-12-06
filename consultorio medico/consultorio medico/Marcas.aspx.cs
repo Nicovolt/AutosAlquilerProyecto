@@ -22,7 +22,7 @@ namespace consultorio_medico
         {
             MarcaNegocio MarcaNegocio = new MarcaNegocio();
             ddlMarcape.DataSource = MarcaNegocio.ListarMarcas();
-            ddlMarcape.DataTextField = "nombre";
+            ddlMarcape.DataTextField = "Nombre";
             ddlMarcape.DataValueField = "IdMarca";
             ddlMarcape.DataBind();
             ddlMarcape.Items.Insert(0, new ListItem("Seleccione la Marca", ""));
@@ -31,30 +31,54 @@ namespace consultorio_medico
         protected void btnAgregar_Click(object sender, EventArgs e)
         {
 
+                MarcaNegocio negocio = new MarcaNegocio();
             try
             {
-                MarcaNegocio negocio = new MarcaNegocio();
-                Marca marca = new Marca();
-                marca.IdMarca = int.Parse(ddlMarcape.DataValueField);
-                marca.Nombre = ddlMarcape.DataTextField;
-                negocio.Agregar(marca);
-
+               
+                
+                string Nuevo = inpNombreMar.Text;
+                negocio.Agregar(Nuevo);
+                CarcarMarca();
             }
             catch (Exception)
             {
 
                 throw;
             }
+            
         }
 
-        protected void Unnamed_Click(object sender, EventArgs e)
+        protected void Editar(object sender, EventArgs e)
         {
-
+            MarcaNegocio negocio = new MarcaNegocio();
+            try
+            {
+                int id = int.Parse(ddlMarcape.SelectedValue);
+                string nombre = inpNombreMarcaNueva.Text;               
+                negocio.Modificar(id,nombre);
+                CarcarMarca();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        protected void Unnamed_Click1(object sender, EventArgs e)
+        protected void Eliminar(object sender, EventArgs e)
         {
+            MarcaNegocio negocio = new MarcaNegocio();
+            
+            try
+            {
+                int id = int.Parse(ddlMarcape.SelectedValue);               
+                negocio.Eliminar(id);
+               CarcarMarca();
+            }
+            catch (Exception)
+            {
 
+                throw;
+            }
         }
     }
 }

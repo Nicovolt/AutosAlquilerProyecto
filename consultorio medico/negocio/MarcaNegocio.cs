@@ -64,14 +64,32 @@ namespace negocio
             }
        }
 
-        public void Agregar(Marca aux)
+        public void Agregar(string aux)
         {
             AccesoDatos datos = new AccesoDatos();
             datos.setearConsulta("INSERT INTO MARCA (nombre) VALUES (@Nombre)");
-            datos.setearParametro("@Nombre", aux.Nombre);
+            datos.setearParametro("@Nombre", aux);
             datos.ejecutarAccion();
             datos.cerrarConexion();
         }
 
+        public void Eliminar(int id)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            datos.setearConsulta("DELETE FROM MARCA WHERE idMarca = @IdMarca");
+            datos.setearParametro("@IdMarca", id);
+            datos.ejecutarAccion();
+            datos.cerrarConexion();
+        }
+
+        public void Modificar(int id, string nombre)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            datos.setearConsulta("UPDATE MARCA SET nombre = @Nombre WHERE idMarca = @IdMarca");
+            datos.setearParametro("@IdMarca", id);
+            datos.setearParametro("@Nombre", nombre);
+            datos.ejecutarAccion();
+            datos.cerrarConexion();
+        }
     }
 }
