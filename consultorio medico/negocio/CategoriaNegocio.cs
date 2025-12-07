@@ -57,26 +57,34 @@ namespace negocio
             }
         }
 
-        public void Editar(int id, string nombre)
+       
+
+        public void Agregar(string aux)
         {
             AccesoDatos datos = new AccesoDatos();
-            try
-            {
-                datos.setearConsulta("UPDATE Categoria SET Nombre = @nombre WHERE IdCategoria = @id");
-                datos.setearParametro("@id", id);
-                datos.setearParametro("@nombre", nombre);
-                datos.ejecutarAccion();
+            datos.setearConsulta("INSERT INTO Categoria (nombre) VALUES (@Nombre)");
+            datos.setearParametro("@Nombre", aux);
+            datos.ejecutarAccion();
+            datos.cerrarConexion();
+        }
 
-            }
-            catch (Exception)
-            {
+        public void Eliminar(int id)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            datos.setearConsulta("DELETE FROM Categoria WHERE IdCategoria = @IdCategoria");
+            datos.setearParametro("@IdCategoria", id);
+            datos.ejecutarAccion();
+            datos.cerrarConexion();
+        }
 
-                throw;
-            }
-            finally
-            {
-                datos.cerrarConexion();
-            }
+        public void Modificar(int id, string nombre)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            datos.setearConsulta("UPDATE Categoria SET nombre = @Nombre WHERE IdCategoria = @IdCategoria");
+            datos.setearParametro("@IdCategoria", id);
+            datos.setearParametro("@Nombre", nombre);
+            datos.ejecutarAccion();
+            datos.cerrarConexion();
         }
     }
 }
