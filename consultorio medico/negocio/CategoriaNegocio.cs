@@ -14,7 +14,7 @@ namespace negocio
         {
             AccesoDatos datos = new AccesoDatos();
             datos.setearConsulta("SELECT * FROM Categoria");
-            datos.ejecutarAccion();
+            datos.ejecutarLectura();
             List<Categoria> lista = new List<Categoria>();
             try
             {
@@ -39,7 +39,7 @@ namespace negocio
             AccesoDatos datos = new AccesoDatos();
             datos.setearConsulta("SELECT * FROM Categoria  WHERE idCategoria = @id");
             datos.setearParametro("@id", id);
-            datos.ejecutarAccion();
+            datos.ejecutarLectura();
             try
             {
                  Categoria aux = new Categoria();

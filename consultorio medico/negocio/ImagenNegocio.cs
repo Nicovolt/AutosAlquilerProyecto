@@ -7,47 +7,63 @@ using System.Threading.Tasks;
 
 namespace negocio
 {
-    internal class ImagenNegocio
+    public class ImagenNegocio
     {
-        public List<Imagen> ListaImagenesPorArticulo(int id)
+        public List<Imagen> ListaImagenesPorArticulo(int idAuto)
         {
-            List<Imagen> imagenes = new List<Imagen>();
-            AccesoDatos data = new AccesoDatos();
+            List<Imagen> lista = new List<Imagen>();
+            AccesoDatos datos = new AccesoDatos();
 
             try
             {
-                // Consulta directa a la tabla Imagen
-                data.setearConsulta("SELECT Id, IdProducto, ImagenUrl, Activo FROM Imagen WHERE IdProducto = @IdAuto");
-                data.setearParametro("@IdAuto", id);
-                data.ejecutarAccion();
+                datos.setearConsulta("SELECT Id, IdAuto, ImagenUrl, Activo FROM Imagen WHERE IdAuto = @idAuto AND Activo = 1");
+                datos.setearParametro("@idAuto", idAuto);
+                datos.ejecutarLectura();
 
-                while (data.Lector.Read())
+                while (datos.Lector.Read())
                 {
-                    Imagen imagen = new Imagen();
-                    imagen.Id = (int)data.Lector["Id"];
-
-                    // Manejar la posibilidad de que IdProducto sea nulo
-                    imagen.IdProducto = data.Lector["IdAuto"] != DBNull.Value ? (int)data.Lector["IdAuto"] : 0; // O cualquier otro valor por defecto que necesites
-
-                    // Asegúrate de que ImagenUrl nunca sea nulo
-                    imagen.ImagenUrl = (string)data.Lector["ImagenUrl"]; // Este campo no debería ser nulo, pero se puede manejar
-
-                    // Manejar el campo Activo
-                    imagen.Activo = (byte)data.Lector["Activo"] != 0; // Convertimos tinyint a bool
-
-                    imagenes.Add(imagen);
+                    Imagen img = new Imagen();
+                    img.Id = (int)datos.Lector["Id"];
+                    img.IdAuto = (int)datos.Lector["IdAuto"];
+                    img.ImagenUrl = (string)datos.Lector["ImagenUrl"];
+                    img.Activo = Convert.ToBoolean(datos.Lector["Activo"]);
+                    lista.Add(img);
                 }
 
+                return lista;
             }
             catch (Exception ex)
             {
-                throw new Exception("Error al listar imágenes por artículo", ex);
+                throw ex;
             }
             finally
             {
-                data.cerrarConexion();
+                datos.cerrarConexion();
             }
-            return imagenes;
+        }
+
+        public void GuardarImagenes(List<Imagen> imagenes, int idAuto)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                foreach (var imagen in imagenes)
+                {
+                    datos.setearConsulta("INSERT INTO Imagen (IdAuto, ImagenUrl, Activo) VALUES (@IdAuto, @ImagenUrl, 1)");
+                    datos.setearParametro("@IdAuto", idAuto);
+                    datos.setearParametro("@ImagenUrl", imagen.ImagenUrl);
+                    datos.ejecutarAccion();
+                    
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
         }
     }
 }

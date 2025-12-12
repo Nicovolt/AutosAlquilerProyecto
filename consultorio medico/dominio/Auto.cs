@@ -18,7 +18,7 @@ namespace dominio
         public string color { get; set; }
         public decimal precio { get; set; }
         public bool disponible { get; set; }
-        public  List<Imagen> ListaImagenes { get; set; }
+        public List<Imagen> ListaImagenes { get; set; } = new List<Imagen>(); // ← agregado
 
 
     }

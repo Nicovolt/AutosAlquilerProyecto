@@ -19,7 +19,7 @@ namespace negocio
             {
                 // Cambiamos a la consulta correcta
                 datos.setearConsulta("SELECT IdAuto, Modelo, Precio, IdMarca, IdCategoria, Anio, Color, NumPatente FROM Autos");
-                datos.ejecutarAccion();
+                datos.ejecutarLectura();
 
                 while (datos.Lector.Read())
                 {
@@ -31,7 +31,7 @@ namespace negocio
                     aux.idCategoria = datos.Lector["IdCategoria"] != DBNull.Value ? (int)datos.Lector["IdCategoria"] : 0;
 
                
-                   // aux.ListaImagenes = imagenNegocio.ListaImagenesPorArticulo(aux.idAuto);
+                    aux.ListaImagenes = imagenNegocio.ListaImagenesPorArticulo(aux.idAuto);
 
                     // Añadimos el producto con las imágenes a la lista
                     lista.Add(aux);
@@ -89,7 +89,7 @@ namespace negocio
             {
                 datos.setearConsulta("select * from Autos where IdAuto = @ID");
                 datos.setearParametro("@ID", id);
-                datos.ejecutarAccion();
+                datos.ejecutarLectura();
                 Auto aux = new Auto();
                 while (datos.Lector.Read())
                 {

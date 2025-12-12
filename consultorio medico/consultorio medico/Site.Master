@@ -60,7 +60,7 @@
         </nav>
         <div class="content">
                 <section>
-                    <asp:ContentPlaceHolder ID="ContentPlaceHolder" runat="server">
+                    <asp:ContentPlaceHolder ID="MainContent" runat="server">
                     </asp:ContentPlaceHolder>
                 </section>
             </div>

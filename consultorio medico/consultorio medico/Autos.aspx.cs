@@ -11,6 +11,21 @@ namespace consultorio_medico
 {
     public partial class Autos : System.Web.UI.Page
     {
+        private List<string> ImagenesTemporales
+        {
+            get
+            {
+                if (ViewState["ImagenesTemporales"] == null)
+                    ViewState["ImagenesTemporales"] = new List<string>();
+                return (List<string>)ViewState["ImagenesTemporales"];
+            }
+            set
+            {
+                ViewState["ImagenesTemporales"] = value;
+            }
+        }
+
+
         protected void Page_Load(object sender, EventArgs e)
         {
             
@@ -101,6 +116,8 @@ namespace consultorio_medico
                 ddlCategoria.SelectedValue = categoria.IdCategoria.ToString();
                 ddlMarca.SelectedValue = marca.IdMarca.ToString();
 
+                ImagenesTemporales = auto.ListaImagenes.Select(img => img.ImagenUrl).ToList();
+
             }
             catch (Exception)
             {
@@ -108,11 +125,57 @@ namespace consultorio_medico
                 throw;
             }
         }
+        protected void btnAgregarImagen_Click(object sender, EventArgs e)
+        {
+            string nuevaUrl = txtNuevaImagen.Text.Trim();
+            if (!string.IsNullOrEmpty(nuevaUrl))
+            {
+                ImagenesTemporales.Add(nuevaUrl);
+                txtNuevaImagen.Text = string.Empty;
+                MostrarImagenes();
+            }
+        }
+
+        private void MostrarImagenes()
+        {
+            pnlImagenes.Controls.Clear();
+
+            foreach (string url in ImagenesTemporales)
+            {
+                Panel imageItem = new Panel();
+                imageItem.CssClass = "image-item";
+
+                TextBox txtUrl = new TextBox();
+                txtUrl.CssClass = "form-control";
+                txtUrl.Text = url;
+                txtUrl.ReadOnly = true;
+
+                Button btnEliminar = new Button();
+                btnEliminar.CssClass = "btn btn-danger btn-remove";
+                btnEliminar.Text = "X";
+                btnEliminar.CommandArgument = url;
+                btnEliminar.Click += BtnEliminarImagen_Click;
+                btnEliminar.CausesValidation = false;
+
+                imageItem.Controls.Add(txtUrl);
+                imageItem.Controls.Add(btnEliminar);
+                pnlImagenes.Controls.Add(imageItem);
+            }
+        }
+
+        protected void BtnEliminarImagen_Click(object sender, EventArgs e)
+        {
+            Button btn = (Button)sender;
+            string urlAEliminar = btn.CommandArgument;
+            ImagenesTemporales.Remove(urlAEliminar);
+            MostrarImagenes();
+        }
 
         protected void btnAgregar_Click(object sender, EventArgs e)
         {
             AutoNegocio autoNegocio = new AutoNegocio();
             Auto auto = new Auto();
+            ImagenNegocio imagenNegocio = new ImagenNegocio();  
             int idAuto = ObtenerIdAuto();
             try
             {
@@ -124,15 +187,23 @@ namespace consultorio_medico
                 auto.idMarca = int.Parse(ddlMarca.SelectedValue);
                 auto.idCategoria = int.Parse(ddlCategoria.SelectedValue);
                 auto.disponible = true;
-                if(idAuto != -1)
+
+                auto.ListaImagenes = ImagenesTemporales
+                    .Select(url => new Imagen { ImagenUrl = url })
+                    .ToList();
+
+                if (idAuto != -1)
                 {
                     auto.idAuto = idAuto;
                     autoNegocio.Modificar(auto);
+                    MostrarExito("Producto modificado exitosamente");
                 }
                 else
                 {
 
                     autoNegocio.Agregar(auto);
+                    imagenNegocio.GuardarImagenes(auto.ListaImagenes, auto.idAuto);
+                    MostrarExito("Producto agregado exitosamente");
                 }
                 Response.Redirect("Default.aspx");
 
@@ -142,6 +213,20 @@ namespace consultorio_medico
 
                 MostrarError("Error al guardar el producto: " + ex.Message);
             }
+        }
+        private void MostrarExito(string mensaje)
+        {
+            ScriptManager.RegisterStartupScript(this, GetType(), "success",
+               $"Swal.fire({{" +
+               $"  icon: 'success'," +
+               $"  title: '¡Éxito!'," +
+               $"  text: '{mensaje}'," +
+               $"  confirmButtonColor: '#3085d6'" +
+               $"}}).then((result) => {{" +
+               $"  if (result.isConfirmed) {{" +
+               $"    window.location = 'Default.aspx';" +
+               $"  }}" +
+               $"}});", true);
         }
         private void MostrarError(string mensaje)
         {

@@ -29,24 +29,6 @@ namespace negocio
             comando.CommandText = consulta;
         }
 
-       
-
-        public void ejecutarAccion()
-        {
-            comando.Connection = conexion;
-
-            try
-            {
-                conexion.Open();
-                lector = comando.ExecuteReader();
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-        }
-
         public void setearParametro(string nombre, object valor)
         {
             comando.Parameters.AddWithValue(nombre, valor);
@@ -57,5 +39,41 @@ namespace negocio
                 lector.Close();
             conexion.Close();
         }
+
+
+        public void ejecutarAccion()
+        {
+            comando.Connection = conexion;
+
+            try
+            {
+                conexion.Open();
+                comando.ExecuteNonQuery(); // <-- Acción SIN lector
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                conexion.Close();
+            }
+        }
+
+        public void ejecutarLectura()
+        {
+            comando.Connection = conexion;
+
+            try
+            {
+                conexion.Open();
+                lector = comando.ExecuteReader(); // <-- Solo SELECT
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
     }
 }
